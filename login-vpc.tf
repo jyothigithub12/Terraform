@@ -81,5 +81,75 @@ resource "aws_route_table_association" "login-private-asc" {
   route_table_id = aws_route_table.login-pvt-rt.id
 }
 
+# Public NACL
+resource "aws_network_acl" "login-public-nacl" {
+  vpc_id = aws_vpc.login-vpc.id
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  tags = {
+    Name = "${var.vpc_name}-public-nacl"
+  }
+}
+
+# Public NACL Association
+resource "aws_network_acl_association" "login-public-nacl-asc" {
+  for_each       = var.public_subnets_cidrs  
+  network_acl_id = aws_network_acl.login-public-nacl.id
+  subnet_id      = aws_subnet.login-pub-subnet[each.key].id
+}
+
+
+# Private NACL
+resource "aws_network_acl" "login-private-nacl" {
+  vpc_id = aws_vpc.login-vpc.id
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  tags = {
+    Name = "${var.vpc_name}-private-nacl"
+  }
+}
+
+# Private NACL Association
+resource "aws_network_acl_association" "login-private-nacl-asc" {
+  for_each       = var.private_subnets_cidrs
+  network_acl_id = aws_network_acl.login-private-nacl.id
+  subnet_id      = aws_subnetlogin-pvt-subnet[each.key].id
+}
+
+
 
 
