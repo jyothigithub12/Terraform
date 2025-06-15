@@ -95,6 +95,19 @@ variable "login_db_inbound_ports" {
 }
 
 
+variable "web_instance_subnet_key" {
+  description = "Which public subnet key to use for the EC2 instance"
+  type        = string
+  default     = "frontend" # Can change to "backend", etc.
+}
+
+variable "web_instance_sg_key" {
+  description = "Which SG to attach to EC2 (fe, api, db)"
+  type        = string
+  default     = "fe"
+}
+
+
 
 
 

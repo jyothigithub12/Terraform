@@ -233,19 +233,26 @@ resource "aws_vpc_security_group_egress_rule" "login-common-outbound" {
 }
 
 
-# Web Server Instance
 resource "aws_instance" "login-web-server" {
   ami           = "ami-0c3b809fcf2445b6a"
   instance_type = "t2.micro"
   key_name      = "terraform-key"
-  subnet_id     = aws_subnet.login-pub-subnet["lms-vpc-frontend-subnet"].id
-  vpc_security_group_ids = [aws_security_group.login-fe-sg.id]
-  user_data     = file("script.sh")
+
+  # Use the subnet key dynamically
+  subnet_id = aws_subnet.login-pub-subnet[var.web_instance_subnet_key].id
+
+  # Use the SG key dynamically from locals
+  vpc_security_group_ids = [
+    local.security_groups[var.web_instance_sg_key]
+  ]
+
+  user_data = file("script.sh")
 
   tags = {
     Name = "login-web-server"
   }
 }
+
 
 
 
