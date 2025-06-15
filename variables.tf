@@ -29,4 +29,27 @@ variable vpc_tenancy {
   default = "default"
 }
 
+# VPC Public Subnets
+variable public_subnets_cidrs {
+  description = "Please Input Subnet Details"
+  type = map(string)
+  default = {
+    frontend = "10.0.0.0/24"
+    backend = "10.0.1.0/24"
+    loadbalancer = "10.0.2.0/24"
+  }
+}
+
+# VPC Private Subnets
+variable private_subnets_cidrs {
+  description = "Please Input Subnet Details"
+  type = map(string)
+  default = {
+    database = "10.0.3.0/24"
+    cache = "10.0.4.0/24"
+  }
+}
+
+
+
 
