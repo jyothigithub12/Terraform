@@ -44,3 +44,42 @@ resource "aws_internet_gateway" "login-igw" {
   }
 }
 
+# Public Route Table
+resource "aws_route_table" "login-pub-rt" {
+  vpc_id = aws_vpc.login-vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.login-igw.id
+  }
+
+  tags = {
+    Name = "${var.vpc_name}-public-rt"
+  }
+}
+
+# Public Route Table - Public SNS ASC
+resource "aws_route_table_association" "login-public-asc" {
+  for_each       = var.public_subnets_cidrs  
+  subnet_id      = aws_subnet.public_subnets[each.key].id
+  route_table_id = aws_route_table.login-pub-rt.id
+}
+
+# Private Route Table
+resource "aws_route_table" "login-pvt-rt" {
+  vpc_id = aws_vpc.login-vpc.id
+
+  tags = {
+    Name = "${var.vpc_name}-private-rt"
+  }
+}
+
+# Private Route Table - Private SNS ASC
+resource "aws_route_table_association" "login-private-asc" {
+  for_each       = var.private_subnets_cidrs
+  subnet_id      = aws_subnet.private_subnets[each.key].id
+  route_table_id = aws_route_table.login-pvt-rt.id
+}
+
+
+
