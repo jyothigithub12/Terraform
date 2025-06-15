@@ -150,6 +150,89 @@ resource "aws_network_acl_association" "login-private-nacl-asc" {
   subnet_id      = aws_subnet.login-pvt-subnet[each.key].id
 }
 
+# Frontend Security Group
+resource "aws_security_group" "login-fe-sg" {
+  name        = "login-frontend"
+  description = "Allow Frontend Traffic"
+  vpc_id      = aws_vpc.login-vpc.id
+
+  tags = {
+    Name = "${var.vpc_name}-fe-sg"
+  }
+}
+
+# Frontend Security Group Rules
+resource "aws_vpc_security_group_ingress_rule" "login-fe-sg-rules" {
+  security_group_id = aws_security_group.login-fe-sg.id
+  count             = length(var.login_fe_inbound_ports)
+  cidr_ipv4         = var.login_fe_inbound_ports[count.index].cidr
+  from_port         = var.login_fe_inbound_ports[count.index].port
+  ip_protocol       = "tcp"
+  to_port           = var.login_fe_inbound_ports[count.index].port
+}
+
+# API Security Group
+resource "aws_security_group" "login-api-sg" {
+  name        = "login-api"
+  description = "Allow API Traffic"
+  vpc_id      = aws_vpc.login-vpc.id
+
+  tags = {
+    Name = "${var.vpc_name}-api-sg"
+  }
+}
+
+# API Security Group Rules
+resource "aws_vpc_security_group_ingress_rule" "login-api-sg-rules" {
+  security_group_id = aws_security_group.login-api-sg.id
+  count             = length(var.login_api_inbound_ports)
+  cidr_ipv4         = var.login_api_inbound_ports[count.index].cidr
+  from_port         = var.login_api_inbound_ports[count.index].port
+  ip_protocol       = "tcp"
+  to_port           = var.login_api_inbound_ports[count.index].port
+}
+
+# DB Security Group
+resource "aws_security_group" "login-db-sg" {
+  name        = "login-db"
+  description = "Allow DB Traffic"
+  vpc_id      = aws_vpc.login-vpc.id
+
+  tags = {
+    Name = "${var.vpc_name}-db-sg"
+  }
+}
+
+# DB Security Group Rules
+resource "aws_vpc_security_group_ingress_rule" "login-db-sg-rules" {
+  security_group_id = aws_security_group.login-db-sg.id
+  count             = length(var.login_db_inbound_ports)
+  cidr_ipv4         = var.login_db_inbound_ports[count.index].cidr
+  from_port         = var.login_db_inbound_ports[count.index].port
+  ip_protocol       = "tcp"
+  to_port           = var.login_db_inbound_ports[count.index].port
+}
+
+# Locals for easier access of egress rules
+locals {
+  security_groups = {
+    fe = aws_security_group.login-fe-sg.id
+    api = aws_security_group.login-api-sg.id
+    db = aws_security_group.login-db-sg.id
+  }
+}
+
+# Common Egress Rules - Outbound All 
+resource "aws_vpc_security_group_egress_rule" "login-common-outbound" {
+  for_each          = local.security_groups
+  security_group_id = each.value
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 0
+  ip_protocol       = "tcp"
+  to_port           = 65535
+}
+
+
 
 
 

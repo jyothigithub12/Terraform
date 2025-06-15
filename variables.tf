@@ -54,6 +54,46 @@ variable private_subnets_cidrs {
   }
 }
 
+# Variable For Security Group - Frontend
+
+variable "login_fe_inbound_ports" {
+  type = list(object({
+    port = number
+    cidr = string
+    
+  }))
+  default = [
+  { port = 22, cidr = "0.0.0.0/0"},
+  { port = 80, cidr = "0.0.0.0/0"},
+  ]
+}
+
+# Variable For Security Group - Backend
+
+variable "login_api_inbound_ports" {
+  type = list(object({
+    port = number
+    cidr = string
+  }))
+  default = [
+  { port = 22, cidr = "0.0.0.0/0"},
+  { port = 8080, cidr = "0.0.0.0/0"},
+  ]
+}
+
+# Variable For Security Group - Database
+
+variable "login_db_inbound_ports" {
+  type = list(object({
+    port = number
+    cidr = string
+  }))
+  default = [
+  { port = 22, cidr = "0.0.0.0/0"},
+  { port = 5432, cidr = "0.0.0.0/0"},
+  ]
+}
+
 
 
 
