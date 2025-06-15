@@ -234,7 +234,7 @@ resource "aws_vpc_security_group_egress_rule" "login-common-outbound" {
 
 
 resource "aws_instance" "login-web-server" {
-  ami           = "ami-0c3b809fcf2445b6a"
+  ami           = "ami-021a584b49225376d"
   instance_type = "t2.micro"
   key_name      = "terraform-key"
 
