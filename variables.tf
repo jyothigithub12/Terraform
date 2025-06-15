@@ -4,21 +4,13 @@
 #AWS access key
 variable access_key {
     description = "enter access key "
-<<<<<<< HEAD
     
-=======
- 
->>>>>>> 83f130c36b7ee8fe156921a130e6b53f9063756e
 }
 
 #aws secret key
 variable secret_key {
     description = "enter secret key"
-<<<<<<< HEAD
     
-=======
-   
->>>>>>> 83f130c36b7ee8fe156921a130e6b53f9063756e
 }
 
 
