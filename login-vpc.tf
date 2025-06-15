@@ -61,7 +61,7 @@ resource "aws_route_table" "login-pub-rt" {
 # Public Route Table - Public SNS ASC
 resource "aws_route_table_association" "login-public-asc" {
   for_each       = var.public_subnets_cidrs  
-  subnet_id      = aws_subnet.public_subnets[each.key].id
+  subnet_id      = aws_subnet.login-pub-subnet[each.key].id
   route_table_id = aws_route_table.login-pub-rt.id
 }
 
@@ -77,7 +77,7 @@ resource "aws_route_table" "login-pvt-rt" {
 # Private Route Table - Private SNS ASC
 resource "aws_route_table_association" "login-private-asc" {
   for_each       = var.private_subnets_cidrs
-  subnet_id      = aws_subnet.private_subnets[each.key].id
+  subnet_id      = aws_subnet.login-pvt-subnet[each.key].id
   route_table_id = aws_route_table.login-pvt-rt.id
 }
 
