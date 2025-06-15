@@ -147,7 +147,7 @@ resource "aws_network_acl" "login-private-nacl" {
 resource "aws_network_acl_association" "login-private-nacl-asc" {
   for_each       = var.private_subnets_cidrs
   network_acl_id = aws_network_acl.login-private-nacl.id
-  subnet_id      = aws_subnetlogin-pvt-subnet[each.key].id
+  subnet_id      = aws_subnet.login-pvt-subnet[each.key].id
 }
 
 
