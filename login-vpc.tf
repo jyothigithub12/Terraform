@@ -34,3 +34,13 @@ resource "aws_subnet" "login-pvt-subnet" {
     Name = "${var.vpc_name}-${each.key}-subnet"
   }
 }
+
+# Internet Gateway
+resource "aws_internet_gateway" "login-igw" {
+  vpc_id = aws_vpc.login-vpc.id
+
+  tags = {
+    Name = "${var.vpc_name}-internet-gateway"
+  }
+}
+
