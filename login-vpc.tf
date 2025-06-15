@@ -27,7 +27,7 @@ resource "aws_subnet" "login-pvt-subnet" {
   vpc_id     = aws_vpc.login-vpc.id
   for_each = var.private_subnets_cidrs
   cidr_block = each.value
-  map_public_ip_on_launch = "true"
+  map_public_ip_on_launch = "false"
   
 
   tags = {
